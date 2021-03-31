@@ -7,8 +7,8 @@ package websocket
 import (
 	"bytes"
 	"context"
-	tls "https://github.com/Raudeck/utls"
 	"errors"
+	tls "github.com/refraction-networking/utls"
 	"io"
 	"io/ioutil"
 	"net"
