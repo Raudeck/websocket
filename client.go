@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	tls "github.com/refraction-networking/utls"
+	tls "github.com/Raudeck/utls"
 	"io"
 	"io/ioutil"
 	"net"

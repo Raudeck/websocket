@@ -3,7 +3,7 @@
 package websocket
 
 import (
-	tls "github.com/refraction-networking/utls"
+	tls "github.com/Raudeck/utls"
 	"net/http/httptrace"
 )
 
