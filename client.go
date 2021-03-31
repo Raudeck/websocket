@@ -383,7 +383,7 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 	return conn, resp, nil
 }
 
-func doHandshake(tlsConn *tls.Conn, cfg *tls.Config) error {
+func doHandshake(tlsConn *tls.UConn, cfg *tls.Config) error {
 	if err := tlsConn.Handshake(); err != nil {
 		return err
 	}
