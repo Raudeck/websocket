@@ -3,17 +3,10 @@
 package websocket
 
 import (
-	"crypto/tls"
+	tls "https://github.com/Raudeck/utls"
 	"net/http/httptrace"
 )
 
-func doHandshakeWithTrace(trace *httptrace.ClientTrace, tlsConn *tls.Conn, cfg *tls.Config) error {
-	if trace.TLSHandshakeStart != nil {
-		trace.TLSHandshakeStart()
-	}
-	err := doHandshake(tlsConn, cfg)
-	if trace.TLSHandshakeDone != nil {
-		trace.TLSHandshakeDone(tlsConn.ConnectionState(), err)
-	}
-	return err
+func doHandshakeWithTrace(trace *httptrace.ClientTrace, tlsConn *tls.UConn, cfg *tls.Config) error {
+	return doHandshake(tlsConn, cfg)
 }

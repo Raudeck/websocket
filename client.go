@@ -7,7 +7,7 @@ package websocket
 import (
 	"bytes"
 	"context"
-	"crypto/tls"
+	tls "https://github.com/Raudeck/utls"
 	"errors"
 	"io"
 	"io/ioutil"
@@ -309,7 +309,8 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 		if cfg.ServerName == "" {
 			cfg.ServerName = hostNoPort
 		}
-		tlsConn := tls.Client(netConn, cfg)
+		var tlsConn *tls.UConn
+		tlsConn := tls.UClient(netConn, cfg, HelloChrome_83)
 		netConn = tlsConn
 
 		var err error

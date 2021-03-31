@@ -6,7 +6,9 @@
 
 package websocket
 
-import "crypto/tls"
+import (
+	tls "https://github.com/Raudeck/utls"
+)
 
 func cloneTLSConfig(cfg *tls.Config) *tls.Config {
 	if cfg == nil {
