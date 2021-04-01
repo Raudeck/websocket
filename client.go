@@ -350,7 +350,7 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 				}},
 				&tls.SessionTicketExtension{},
 				&tls.StatusRequestExtension{},
-				&tls.SignatureAlgorithmsExtension{SupportedSignatureAlgorithms: []SignatureScheme{
+				&tls.SignatureAlgorithmsExtension{SupportedSignatureAlgorithms: []tls.SignatureScheme{
 					tls.ECDSAWithP256AndSHA256,
 					tls.PSSWithSHA256,
 					tls.PKCS1WithSHA256,
@@ -382,7 +382,7 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 				&tls.GenericExtension{id: 0x0029}, // WARNING: UNKNOWN EXTENSION, USE AT YOUR OWN RISK
 			},
 		}
-		tlsConn.ApplyPreset(clientHelloSpec)
+		tlsConn.ApplyPreset(&clientHelloSpec)
 		netConn = tlsConn
 
 		var err error
