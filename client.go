@@ -338,7 +338,7 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 				&tls.UtlsGREASEExtension{},
 				&tls.SNIExtension{},
 				&tls.UtlsExtendedMasterSecretExtension{},
-				&tls.RenegotiationInfoExtension{renegotiation: tls.RenegotiateOnceAsClient},
+				&tls.RenegotiationInfoExtension{Renegotiation: tls.RenegotiateOnceAsClient},
 				&tls.SupportedCurvesExtension{[]tls.CurveID{
 					tls.CurveID(tls.GREASE_PLACEHOLDER),
 					tls.X25519,
@@ -379,7 +379,6 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 					tls.CertCompressionBrotli,
 				}},
 				&tls.UtlsGREASEExtension{},
-				&tls.GenericExtension{id: 0x0029}, // WARNING: UNKNOWN EXTENSION, USE AT YOUR OWN RISK
 			},
 		}
 		tlsConn.ApplyPreset(&clientHelloSpec)
