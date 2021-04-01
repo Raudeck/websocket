@@ -310,7 +310,7 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 			cfg.ServerName = hostNoPort
 		}
 		var tlsConn *tls.UConn
-		tlsConn = tls.UClient(netConn, cfg, tls.HelloChrome_83)
+		tlsConn = tls.UClient(netConn, cfg, tls.HelloIOS_12_1)
 		netConn = tlsConn
 
 		var err error
