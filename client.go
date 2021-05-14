@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	tls "github.com/Raudeck/utls"
 	"io"
 	"io/ioutil"
 	"net"
@@ -16,8 +17,6 @@ import (
 	"net/url"
 	"strings"
 	"time"
-
-	tls "github.com/Raudeck/utls"
 )
 
 // ErrBadHandshake is returned when the server response to opening handshake is
@@ -311,77 +310,7 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 			cfg.ServerName = hostNoPort
 		}
 		var tlsConn *tls.UConn
-		tlsConn = tls.UClient(netConn, cfg, tls.HelloCustom)
-		clientHelloSpec := tls.ClientHelloSpec{
-			CipherSuites: []uint16{
-				tls.GREASE_PLACEHOLDER,
-				tls.TLS_AES_128_GCM_SHA256,
-				tls.TLS_AES_256_GCM_SHA384,
-				tls.TLS_CHACHA20_POLY1305_SHA256,
-				tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-				tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-				tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-				tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-				tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
-				tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
-				tls.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
-				tls.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
-				tls.TLS_RSA_WITH_AES_128_GCM_SHA256,
-				tls.TLS_RSA_WITH_AES_256_GCM_SHA384,
-				tls.TLS_RSA_WITH_AES_128_CBC_SHA,
-				tls.TLS_RSA_WITH_AES_256_CBC_SHA,
-			},
-			CompressionMethods: []byte{
-				0x00, // compressionNone
-			},
-			Extensions: []tls.TLSExtension{
-				&tls.UtlsGREASEExtension{},
-				&tls.SNIExtension{},
-				&tls.UtlsExtendedMasterSecretExtension{},
-				&tls.RenegotiationInfoExtension{Renegotiation: tls.RenegotiateOnceAsClient},
-				&tls.SupportedCurvesExtension{[]tls.CurveID{
-					tls.CurveID(tls.GREASE_PLACEHOLDER),
-					tls.X25519,
-					tls.CurveP256,
-					tls.CurveP384,
-				}},
-				&tls.SupportedPointsExtension{SupportedPoints: []byte{
-					0x00, // pointFormatUncompressed
-				}},
-				&tls.SessionTicketExtension{},
-				&tls.StatusRequestExtension{},
-				&tls.SignatureAlgorithmsExtension{SupportedSignatureAlgorithms: []tls.SignatureScheme{
-					tls.ECDSAWithP256AndSHA256,
-					tls.PSSWithSHA256,
-					tls.PKCS1WithSHA256,
-					tls.ECDSAWithP384AndSHA384,
-					tls.PSSWithSHA384,
-					tls.PKCS1WithSHA384,
-					tls.PSSWithSHA512,
-					tls.PKCS1WithSHA512,
-				}},
-				&tls.SCTExtension{},
-				&tls.KeyShareExtension{[]tls.KeyShare{
-					{Group: tls.CurveID(tls.GREASE_PLACEHOLDER), Data: []byte{0}},
-					{Group: tls.X25519},
-				}},
-				&tls.PSKKeyExchangeModesExtension{[]uint8{
-					tls.PskModeDHE,
-				}},
-				&tls.SupportedVersionsExtension{[]uint16{
-					tls.GREASE_PLACEHOLDER,
-					tls.VersionTLS13,
-					tls.VersionTLS12,
-					tls.VersionTLS11,
-					tls.VersionTLS10,
-				}},
-				&tls.FakeCertCompressionAlgsExtension{[]tls.CertCompressionAlgo{
-					tls.CertCompressionBrotli,
-				}},
-				&tls.UtlsGREASEExtension{},
-			},
-		}
-		tlsConn.ApplyPreset(&clientHelloSpec)
+		tlsConn = tls.UClient(netConn, cfg, tls.HelloChrome_83)
 		netConn = tlsConn
 
 		var err error
@@ -454,7 +383,7 @@ func (d *Dialer) DialContext(ctx context.Context, urlStr string, requestHeader h
 	return conn, resp, nil
 }
 
-func doHandshake(tlsConn *tls.UConn, cfg *tls.Config) error {
+func doHandshake(tlsConn *tls.Conn, cfg *tls.Config) error {
 	if err := tlsConn.Handshake(); err != nil {
 		return err
 	}

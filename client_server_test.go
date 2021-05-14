@@ -7,7 +7,7 @@ package websocket
 import (
 	"bytes"
 	"context"
-	truetls "crypto/tls"
+	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/binary"
@@ -25,8 +25,6 @@ import (
 	"strings"
 	"testing"
 	"time"
-
-	tls "github.com/Raudeck/utls"
 )
 
 var cstUpgrader = Upgrader{
@@ -734,15 +732,8 @@ func TestHost(t *testing.T) {
 		// Confirm that net/http has same result
 
 		transport := &http.Transport{
-			Dial: func(network, addr string) (net.Conn, error) {
-				gotAddr = addr
-				return net.Dial(network, addrs[tt.server])
-			},
-			TLSClientConfig: &truetls.Config{
-				RootCAs:            cas,
-				ServerName:         tt.tls,
-				InsecureSkipVerify: tt.insecureSkipVerify,
-			},
+			Dial:            dialer.NetDial,
+			TLSClientConfig: dialer.TLSClientConfig,
 		}
 		req, _ := http.NewRequest("GET", httpProtos[tt.server]+tt.url+"/", nil)
 		if tt.header != "" {
