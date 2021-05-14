@@ -735,10 +735,6 @@ func TestHost(t *testing.T) {
 		// Confirm that net/http has same result
 
 		transport := &http.Transport{
-<<<<<<< HEAD
-			Dial:            dialer.NetDial,
-			TLSClientConfig: dialer.TLSClientConfig,
-=======
 			Dial: func(network, addr string) (net.Conn, error) {
 				gotAddr = addr
 				return net.Dial(network, addrs[tt.server])
@@ -748,7 +744,6 @@ func TestHost(t *testing.T) {
 				ServerName:         tt.tls,
 				InsecureSkipVerify: tt.insecureSkipVerify,
 			},
->>>>>>> upstream/main
 		}
 		req, _ := http.NewRequest("GET", httpProtos[tt.server]+tt.url+"/", nil)
 		if tt.header != "" {
